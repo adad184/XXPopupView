@@ -1,0 +1,6 @@
+framework module Pods_XXPopupView {
+  umbrella header "Pods-XXPopupView-umbrella.h"
+
+  export *
+  module * { export * }
+}
