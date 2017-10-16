@@ -77,12 +77,12 @@ extension NSString {
 }
 
 extension UIView {
-
-    struct UIViewRuntimeKey {
-        static let mm_dimReferenceCount = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
+    
+    private struct UIViewRuntimeKey {
+        static let mm_dimReferenceCount = "mm_dimReferenceCount"
         
-        static let mm_dimBackgroundView = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
-        static let mm_dimBackgroundBlurEnabled = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
+        static var mm_dimBackgroundView = "mm_dimBackgroundView"
+        static let mm_dimBackgroundBlurEnabled = "mm_dimBackgroundBlurEnabled"
         static let mm_dimBackgroundBlurEffectStyle = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
         
         static let mm_dimBackgroundBlurView = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
@@ -102,11 +102,11 @@ extension UIView {
     
     var mm_dimReferenceCount: Int! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount!, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount, newValue, .OBJC_ASSOCIATION_ASSIGN)
         }
         
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount!) as! Int
+            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount) as! Int
         }
     }
     
@@ -120,20 +120,19 @@ extension UIView {
         }
     }
     
-    var mm_dimBackgroundView: UIView? {
+    var mm_dimBackgroundView: UIView {
         get {
-            var dimView = objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundView!) as? UIView;
-
-            if dimView == nil {
-                dimView = UIView.init()
-                self.addSubview(dimView!)
-                dimView!.snp.makeConstraints { (make) -> Void in
+            guard let dimView = objc_getAssociatedObject(self, &UIViewRuntimeKey.mm_dimBackgroundView) as? UIView else {
+                let dimView = UIView()
+                self.addSubview(dimView)
+                dimView.snp.makeConstraints { (make) -> Void in
                     make.edges.equalTo(self);
                 }
-                dimView?.alpha = 0.0
-                dimView?.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
-                dimView?.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-                objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundView!, dimView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                dimView.alpha = 0.0
+                dimView.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
+                dimView.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.mm_dimBackgroundView, dimView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                return dimView
             }
             return dimView
         }
@@ -141,18 +140,18 @@ extension UIView {
     
     var mm_dimBackgroundBlurEnabled: Bool! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled!, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled, newValue, .OBJC_ASSOCIATION_ASSIGN)
             if mm_dimBackgroundBlurEnabled {
-                self.mm_dimBackgroundView?.backgroundColor = UIColor.init(xx_hex: 0x00000000)
+                self.mm_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x00000000)
                 self.mm_dimBackgroundBlurView.isHidden = false
             }
             else {
-                self.mm_dimBackgroundView?.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
+                self.mm_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
                 self.mm_dimBackgroundBlurView.isHidden = true
             }
         }
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled!) as! Bool
+            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled) as! Bool
         }
     }
     
@@ -164,7 +163,7 @@ extension UIView {
                 self.mm_dimBackgroundBlurView = nil
                 let blurView = self.mm_dimBackgroundBlurView
                 blurView?.snp.makeConstraints({ (make) -> Void in
-                    make.edges.equalTo(self.mm_dimBackgroundView!)
+                    make.edges.equalTo(self.mm_dimBackgroundView)
                 })
             }
         }
@@ -180,17 +179,17 @@ extension UIView {
         }
         
         get {
-            var blurView = objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!) as? UIView
-            if blurView == nil {
-                blurView = UIView.init()
+            guard let blurView = objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!) as? UIView else {
+                let blurView = UIView()
                 let effectView = UIVisualEffectView.init(effect: UIBlurEffect.init(style: self.mm_dimBackgroundBlurEffectStyle))
-                blurView?.addSubview(effectView)
+                blurView.addSubview(effectView)
                 effectView.snp.makeConstraints({ (make) -> Void in
-                    make.edges.equalTo(blurView!)
+                    make.edges.equalTo(blurView)
                 })
+                blurView.isUserInteractionEnabled = false
+                objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!, blurView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                return blurView
             }
-            blurView!.isUserInteractionEnabled = false
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!, blurView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return blurView;
         }
     }
@@ -206,7 +205,7 @@ extension UIView {
                        delay: 0,
                        options: [UIViewAnimationOptions.curveEaseOut, .beginFromCurrentState],
                        animations: { () -> Void in
-                        self.mm_dimBackgroundView?.alpha = 0.0
+                        self.mm_dimBackgroundView.alpha = 0.0
         },
                        completion: { (finished: Bool) -> Void in
                         if finished {
@@ -230,7 +229,7 @@ extension UIView {
         if self.mm_dimReferenceCount > 1 {
             return
         }
-        self.mm_dimBackgroundView?.isHidden = false
+        self.mm_dimBackgroundView.isHidden = false
         self.mm_dimBackgroundAnimating = true
 
         
@@ -253,7 +252,7 @@ extension UIView {
                        delay: 0,
                        options: [UIViewAnimationOptions.curveEaseOut, .beginFromCurrentState],
             animations: { () -> Void in
-                self.mm_dimBackgroundView?.alpha = 1.0
+                self.mm_dimBackgroundView.alpha = 1.0
         },
             completion: { (finished: Bool) -> Void in
                 if finished {

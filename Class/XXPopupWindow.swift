@@ -10,10 +10,14 @@ import UIKit
 
 class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
 
-    var touchWildToHide: Bool
+    var touchWildToHide: Bool = false
+    
+    
+    open var attachView: UIView {
+        return (self.rootViewController?.view!)!
+    }
     
     override init(frame: CGRect) {
-        self.touchWildToHide = true
         
         super.init(frame: frame)
         
@@ -37,38 +41,30 @@ class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
     
     func actionTap(gesture: UITapGestureRecognizer) {
         if self.touchWildToHide && !self.mm_dimBackgroundAnimating {
-            for v in (self.attachView()?.mm_dimBackgroundView?.subviews)! {
+            for v in (self.attachView.mm_dimBackgroundView.subviews) {
                 if v is UIButton {
                     v.isHidden = true
                 }
             }
         }
-//        if ( self.touchWildToHide && !self.mm_dimBackgroundAnimating )
-//        {
-//            for ( UIView *v in [self attachView].mm_dimBackgroundView.subviews )
-//            {
-//                if ( [v isKindOfClass:[MMPopupView class]] )
-//                {
-//                    MMPopupView *popupView = (MMPopupView*)v;
-//                    [popupView hide];
-//                }
-//            }
-//        }
+        if self.touchWildToHide && !self.mm_dimBackgroundAnimating {
+            for v in self.attachView.mm_dimBackgroundView.subviews {
+                if v.isKind(of: XXPopupView.self) {
+                    (v as! XXPopupView).hide()
+                }
+            }
+        }
     }
 
     func cacheWindow() {
         self.makeKeyAndVisible()
         UIApplication.shared.delegate?.window??.makeKeyAndVisible()
-        self.attachView()?.mm_dimBackgroundView?.isHidden = true
+        self.attachView.mm_dimBackgroundView.isHidden = true
         self.isHidden = true
     }
-    
-    func attachView() -> UIView? {
-        return self.rootViewController?.view
-    }
-   
+  
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        return touch.view == self.attachView()
+        return touch.view == self.attachView
     }
 
 }

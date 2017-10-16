@@ -15,6 +15,8 @@
 		03CE0DC81F9321FA004C5AC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03CE0DC61F9321FA004C5AC6 /* LaunchScreen.storyboard */; };
 		03CE0DD11F932502004C5AC6 /* XXPopupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CE0DD01F932502004C5AC6 /* XXPopupWindow.swift */; };
 		03CE0DD51F932E0C004C5AC6 /* XXPopupCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CE0DD41F932E0C004C5AC6 /* XXPopupCategory.swift */; };
+		97B9DC691F94DE1500891B21 /* XXPopupItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B9DC681F94DE1500891B21 /* XXPopupItem.swift */; };
+		97B9DC6B1F94DF9F00891B21 /* XXAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B9DC6A1F94DF9F00891B21 /* XXAlertView.swift */; };
 		9AF756E326F5263E76468E8B /* Pods_XXPopupView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4B79CAF207F878D6D31B1B /* Pods_XXPopupView.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +32,8 @@
 		03CE0DD01F932502004C5AC6 /* XXPopupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXPopupWindow.swift; sourceTree = "<group>"; };
 		03CE0DD41F932E0C004C5AC6 /* XXPopupCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXPopupCategory.swift; sourceTree = "<group>"; };
 		0B4B79CAF207F878D6D31B1B /* Pods_XXPopupView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XXPopupView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		97B9DC681F94DE1500891B21 /* XXPopupItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXPopupItem.swift; sourceTree = "<group>"; };
+		97B9DC6A1F94DF9F00891B21 /* XXAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXAlertView.swift; sourceTree = "<group>"; };
 		AC4A95160ACA0758DA06FA10 /* Pods-XXPopupView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XXPopupView.release.xcconfig"; path = "Pods/Target Support Files/Pods-XXPopupView/Pods-XXPopupView.release.xcconfig"; sourceTree = "<group>"; };
 		EDB4071F117151E679C7C271 /* Pods-XXPopupView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XXPopupView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XXPopupView/Pods-XXPopupView.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +88,8 @@
 				03CE0DD01F932502004C5AC6 /* XXPopupWindow.swift */,
 				03CE0DD41F932E0C004C5AC6 /* XXPopupCategory.swift */,
 				03501C761F93B34A00DBD42F /* XXPopupView.swift */,
+				97B9DC681F94DE1500891B21 /* XXPopupItem.swift */,
+				97B9DC6A1F94DF9F00891B21 /* XXAlertView.swift */,
 			);
 			name = Class;
 			path = ../../Class;
@@ -238,6 +244,8 @@
 				03CE0DC01F9321FA004C5AC6 /* ViewController.swift in Sources */,
 				03CE0DD11F932502004C5AC6 /* XXPopupWindow.swift in Sources */,
 				03CE0DBE1F9321FA004C5AC6 /* AppDelegate.swift in Sources */,
+				97B9DC6B1F94DF9F00891B21 /* XXAlertView.swift in Sources */,
+				97B9DC691F94DE1500891B21 /* XXPopupItem.swift in Sources */,
 				03501C771F93B34A00DBD42F /* XXPopupView.swift in Sources */,
 				03CE0DD51F932E0C004C5AC6 /* XXPopupCategory.swift in Sources */,
 			);
