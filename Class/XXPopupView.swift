@@ -26,9 +26,9 @@ extension Notification.Name {
 class XXPopupView: UIView {
     
     var visible: Bool {
-        return self.attachedView.mm_dimBackgroundView.isHidden
+        return self.attachedView.xx_dimBackgroundView.isHidden
     }
-    var attachedView: UIView = XXPopupWindow.sharedWindow().attachView
+    var attachedView: UIView = XXPopupWindow.shared().attachView
     var type: XXPopupType = .alert {
         didSet {
             switch type {
@@ -47,7 +47,7 @@ class XXPopupView: UIView {
     var withKeyboard: Bool = false
     var animationDuration: TimeInterval = 0.3 {
         didSet {
-            attachedView.mm_dimAnimationDuration = animationDuration
+            attachedView.xx_dimAnimationDuration = animationDuration
         }
     }
     var showCompletionBlock: XXPopupCompletionBlock?
@@ -57,7 +57,7 @@ class XXPopupView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        NotificationCenter.default.addObserver(self, selector: Selector(("notifyHideAll:")), name: .XXPopupViewHideAllNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notifyHideAll(_:)), name: .XXPopupViewHideAllNotification, object: nil)
     }
     
     deinit {
@@ -67,7 +67,7 @@ class XXPopupView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func notifyHideAll(_ nti: Notification) -> Void {
+    @objc func notifyHideAll(_ nti: Notification) -> Void {
         guard let _ = nti.object as? XXPopupView else {
             return
         }
@@ -83,7 +83,7 @@ class XXPopupView: UIView {
     }
     func show(block: XXPopupCompletionBlock?) -> Void {
         self.showCompletionBlock = block
-        self.attachedView.mm_showDimBackground()
+        self.attachedView.xx_showDimBackground()
         if let showAnimation = self.showAnimation {
             showAnimation(self)
         }
@@ -97,7 +97,7 @@ class XXPopupView: UIView {
     
     func hide(block: XXPopupCompletionBlock?) {
         self.hideCompletionBlock = block
-        self.attachedView.mm_hideDimBackground()
+        self.attachedView.xx_hideDimBackground()
         if self.withKeyboard {
             self.hideKeyboard()
         }
@@ -111,7 +111,7 @@ class XXPopupView: UIView {
             [weak self] (popupView: XXPopupView) in
             
             if self?.superview == nil {
-                self?.attachedView.mm_dimBackgroundView.addSubview(self!)
+                self?.attachedView.xx_dimBackgroundView.addSubview(self!)
                 self?.snp.makeConstraints({ (make) in
                     make.center.equalTo((self?.attachedView)!).offset((self?.withKeyboard)! ? -216 / 2 : 0)
                 })
@@ -172,7 +172,7 @@ class XXPopupView: UIView {
             [weak self] (popupView: XXPopupView) in
             
             if self?.superview == nil {
-                self?.attachedView.mm_dimBackgroundView.addSubview(self!)
+                self?.attachedView.xx_dimBackgroundView.addSubview(self!)
                 self?.snp.makeConstraints({ (make) in
                     make.centerX.equalTo((self?.attachedView)!)
                     make.bottom.equalTo((self?.attachedView.snp.bottom)!).offset((self?.attachedView.frame.size.height)!)
@@ -233,7 +233,7 @@ class XXPopupView: UIView {
         let block: (XXPopupView) -> Void = {
             [weak self] (popupView: XXPopupView) in
             if self?.superview == nil {
-                self?.attachedView.mm_dimBackgroundView.addSubview(self!)
+                self?.attachedView.xx_dimBackgroundView.addSubview(self!)
                 self?.snp.updateConstraints({ (make) in
                     make.centerX.equalTo((self?.attachedView)!)
                     make.centerY.equalTo((self?.attachedView)!).offset((self?.attachedView.bounds.size.height)!)

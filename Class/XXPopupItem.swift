@@ -11,7 +11,7 @@ import UIKit
 typealias XXPopupItemHandler = (_ index: Int) ->Void
 enum XXItemType {
     case normal
-    case highlight
+    case highlighted
     case disbaled
 }
 class XXPopupItem: NSObject {
@@ -20,11 +20,11 @@ class XXPopupItem: NSObject {
     var title: String?
     var color: UIColor?
     var handler: XXPopupItemHandler?
-    init(title: String, type: XXItemType, handler: @escaping XXPopupItemHandler) {
+    init(title: String, type: XXItemType, handler: XXPopupItemHandler?) {
         self.title = title
         self.handler = handler
         switch type {
-        case .highlight:
+        case .highlighted:
             self.highlight = true
         case .disbaled:
             self.disabled = true

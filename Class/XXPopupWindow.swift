@@ -23,7 +23,7 @@ class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
         
         self.windowLevel = UIWindowLevelStatusBar + 1
         
-        let gesture = UITapGestureRecognizer.init(target: self, action: Selector(("actionTap:")))
+        let gesture = UITapGestureRecognizer.init(target: self, action: #selector(actionTap(gesture:)))
         gesture.cancelsTouchesInView = false
         gesture.delegate = self
         self.addGestureRecognizer(gesture)
@@ -33,22 +33,28 @@ class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    static let instance: XXPopupWindow = XXPopupWindow(frame: UIScreen.main.bounds)
+    private static let instance: XXPopupWindow = {
+        
+        let instance = XXPopupWindow.init(frame: UIScreen.main.bounds)
+        instance.rootViewController = UIViewController()
+        
+        return instance
+    }()
     
-    class func sharedWindow() -> XXPopupWindow {
+    open class func shared() -> XXPopupWindow {
         return instance
     }
     
-    func actionTap(gesture: UITapGestureRecognizer) {
-        if self.touchWildToHide && !self.mm_dimBackgroundAnimating {
-            for v in (self.attachView.mm_dimBackgroundView.subviews) {
+    @objc func actionTap(gesture: UITapGestureRecognizer) {
+        if self.touchWildToHide && !self.xx_dimBackgroundAnimating {
+            for v in (self.attachView.xx_dimBackgroundView.subviews) {
                 if v is UIButton {
                     v.isHidden = true
                 }
             }
         }
-        if self.touchWildToHide && !self.mm_dimBackgroundAnimating {
-            for v in self.attachView.mm_dimBackgroundView.subviews {
+        if self.touchWildToHide && !self.xx_dimBackgroundAnimating {
+            for v in self.attachView.xx_dimBackgroundView.subviews {
                 if v.isKind(of: XXPopupView.self) {
                     (v as! XXPopupView).hide()
                 }
@@ -59,7 +65,7 @@ class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
     func cacheWindow() {
         self.makeKeyAndVisible()
         UIApplication.shared.delegate?.window??.makeKeyAndVisible()
-        self.attachView.mm_dimBackgroundView.isHidden = true
+        self.attachView.xx_dimBackgroundView.isHidden = true
         self.isHidden = true
     }
   

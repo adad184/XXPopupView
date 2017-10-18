@@ -59,9 +59,19 @@ extension UIImage {
 }
 
 extension NSString {
-    func mm_truncate(charLength: UInt) -> NSString {
+    func xx_truncate(charLength: UInt) -> NSString {
         
         var length = 0;
+//        self.enumerateSubstrings(in: NSMakeRange(0, self.count),
+//                                 options: .byComposedCharacterSequences) { (substring, substringRange, enclosingRange, stop) in
+//                                    if length+substringRange.length > charLength {
+//                                        stop.pointee = true
+//                                        return
+//                                    }
+//                                    length += substringRange.length
+//
+//        }
+//        return self.substring(to: length) as String
         self.enumerateSubstrings(in: NSMakeRange(0, self.length),
                                  options: .byComposedCharacterSequences,
                                  using: {
@@ -79,50 +89,75 @@ extension NSString {
 extension UIView {
     
     private struct UIViewRuntimeKey {
-        static let mm_dimReferenceCount = "mm_dimReferenceCount"
+        static var xx_dimReferenceCount = "xx_dimReferenceCount"
         
-        static var mm_dimBackgroundView = "mm_dimBackgroundView"
-        static let mm_dimBackgroundBlurEnabled = "mm_dimBackgroundBlurEnabled"
-        static let mm_dimBackgroundBlurEffectStyle = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
+        static var xx_dimBackgroundView = "xx_dimBackgroundView"
+        static var xx_dimBackgroundBlurEnabled = "xx_dimBackgroundBlurEnabled"
+        static var xx_dimBackgroundBlurEffectStyle = "xx_dimBackgroundBlurEffectStyle"
         
-        static let mm_dimBackgroundBlurView = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
-        static let mm_dimBackgroundAnimating = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
-        static let mm_dimAnimationDuration = UnsafeRawPointer.init(bitPattern: "UIViewRuntimeKey".hashValue)
+        static var xx_dimBackgroundBlurView = "xx_dimBackgroundBlurView"
+        static var xx_dimBackgroundAnimating = "xx_dimBackgroundAnimating"
+        static var xx_dimAnimationDuration = "xx_dimAnimationDuration"
     }
     
-    var mm_dimAnimationDuration: TimeInterval! {
+    var xx_dimAnimationDuration: TimeInterval! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimAnimationDuration!, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, UIViewRuntimeKey.xx_dimAnimationDuration, newValue, .OBJC_ASSOCIATION_ASSIGN)
         }
         
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimAnimationDuration!) as! TimeInterval
+            guard let duration = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimAnimationDuration) as? TimeInterval else {
+                
+                let initialDuration: TimeInterval = 0.3
+                
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimAnimationDuration, initialDuration, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                
+                return initialDuration
+            }
+            return duration
         }
     }
     
-    var mm_dimReferenceCount: Int! {
+    var xx_dimReferenceCount: Int! {
+        
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, UIViewRuntimeKey.xx_dimReferenceCount, newValue, .OBJC_ASSOCIATION_ASSIGN)
         }
         
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimReferenceCount) as! Int
+            guard let count = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimReferenceCount) as? Int else {
+                
+                let initialCount: Int = 0
+                
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimReferenceCount, initialCount, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                
+                return initialCount
+            }
+            return count
         }
     }
     
-    var mm_dimBackgroundAnimating: Bool! {
+    var xx_dimBackgroundAnimating: Bool! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundAnimating!, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundAnimating, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundAnimating!) as! Bool
+            guard let animating = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundAnimating) as? Bool else {
+                
+                let initialAnimating: Bool = true
+                
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundAnimating, initialAnimating, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                
+                return initialAnimating
+            }
+            return animating
         }
     }
     
-    var mm_dimBackgroundView: UIView {
+    var xx_dimBackgroundView: UIView {
         get {
-            guard let dimView = objc_getAssociatedObject(self, &UIViewRuntimeKey.mm_dimBackgroundView) as? UIView else {
+            guard let dimView = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundView) as? UIView else {
                 let dimView = UIView()
                 self.addSubview(dimView)
                 dimView.snp.makeConstraints { (make) -> Void in
@@ -131,137 +166,141 @@ extension UIView {
                 dimView.alpha = 0.0
                 dimView.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
                 dimView.layer.zPosition = CGFloat(Float.greatestFiniteMagnitude)
-                objc_setAssociatedObject(self, &UIViewRuntimeKey.mm_dimBackgroundView, dimView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundView, dimView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 return dimView
             }
             return dimView
         }
     }
     
-    var mm_dimBackgroundBlurEnabled: Bool! {
+    var xx_dimBackgroundBlurEnabled: Bool! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled, newValue, .OBJC_ASSOCIATION_ASSIGN)
-            if mm_dimBackgroundBlurEnabled {
-                self.mm_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x00000000)
-                self.mm_dimBackgroundBlurView.isHidden = false
+            objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEnabled, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            if xx_dimBackgroundBlurEnabled {
+                self.xx_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x00000000)
+                self.xx_dimBackgroundBlurView.isHidden = false
             }
             else {
-                self.mm_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
-                self.mm_dimBackgroundBlurView.isHidden = true
+                self.xx_dimBackgroundView.backgroundColor = UIColor.init(xx_hex: 0x0000007F)
+                self.xx_dimBackgroundBlurView.isHidden = true
             }
         }
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEnabled) as! Bool
+            guard let enabled = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEnabled) as? Bool  else {
+                let initialEnabled = true
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEnabled, initialEnabled, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                return initialEnabled
+            }
+            return enabled
         }
     }
     
-    var mm_dimBackgroundBlurEffectStyle: UIBlurEffectStyle! {
+    var xx_dimBackgroundBlurEffectStyle: UIBlurEffectStyle! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEffectStyle!, newValue, .OBJC_ASSOCIATION_ASSIGN)
-            if self.mm_dimBackgroundBlurEnabled {
-                self.mm_dimBackgroundBlurView.removeFromSuperview()
-                self.mm_dimBackgroundBlurView = nil
-                let blurView = self.mm_dimBackgroundBlurView
+            objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEffectStyle, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            if self.xx_dimBackgroundBlurEnabled {
+                self.xx_dimBackgroundBlurView.removeFromSuperview()
+                self.xx_dimBackgroundBlurView = nil
+                let blurView = self.xx_dimBackgroundBlurView
                 blurView?.snp.makeConstraints({ (make) -> Void in
-                    make.edges.equalTo(self.mm_dimBackgroundView)
+                    make.edges.equalTo(self.xx_dimBackgroundView)
                 })
             }
         }
         
         get {
-            return objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurEffectStyle!) as! UIBlurEffectStyle
+            guard let style = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEffectStyle) as? UIBlurEffectStyle  else {
+                let initialStyle: UIBlurEffectStyle = .light
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurEffectStyle, initialStyle, .OBJC_ASSOCIATION_ASSIGN)
+                return initialStyle
+            }
+            return style
         }
     }
     
-    var mm_dimBackgroundBlurView: UIView! {
+    var xx_dimBackgroundBlurView: UIView! {
         set {
-            objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurView, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         
         get {
-            guard let blurView = objc_getAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!) as? UIView else {
+            guard let blurView = objc_getAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurView) as? UIView else {
                 let blurView = UIView()
-                let effectView = UIVisualEffectView.init(effect: UIBlurEffect.init(style: self.mm_dimBackgroundBlurEffectStyle))
+                let effectView = UIVisualEffectView.init(effect: UIBlurEffect.init(style: self.xx_dimBackgroundBlurEffectStyle))
                 blurView.addSubview(effectView)
                 effectView.snp.makeConstraints({ (make) -> Void in
                     make.edges.equalTo(blurView)
                 })
                 blurView.isUserInteractionEnabled = false
-                objc_setAssociatedObject(self, UIViewRuntimeKey.mm_dimBackgroundBlurView!, blurView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &UIViewRuntimeKey.xx_dimBackgroundBlurView, blurView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 return blurView
             }
             return blurView;
         }
     }
     
-    func mm_hideDimBackground() {
-        self.mm_dimReferenceCount = self.mm_dimReferenceCount - 1
-        if self.mm_dimReferenceCount > 0 {
+    func xx_hideDimBackground() {
+        self.xx_dimReferenceCount = self.xx_dimReferenceCount - 1
+        if self.xx_dimReferenceCount > 0 {
             return
         }
-        self.mm_dimBackgroundAnimating = true
+        self.xx_dimBackgroundAnimating = true
         
-        UIView.animate(withDuration: self.mm_dimAnimationDuration,
+        UIView.animate(withDuration: self.xx_dimAnimationDuration,
                        delay: 0,
                        options: [UIViewAnimationOptions.curveEaseOut, .beginFromCurrentState],
                        animations: { () -> Void in
-                        self.mm_dimBackgroundView.alpha = 0.0
+                        self.xx_dimBackgroundView.alpha = 0.0
         },
                        completion: { (finished: Bool) -> Void in
                         if finished {
-                            self.mm_dimBackgroundAnimating = false
-//                            if ( self == [MMPopupWindow sharedWindow].attachView )
-//                            {
-//                                [MMPopupWindow sharedWindow].hidden = YES;
-//                                [[[UIApplication sharedApplication].delegate window] makeKeyWindow];
-//                            }
-//                            else if ( self == [MMPopupWindow sharedWindow] )
-//                            {
-//                                self.hidden = YES;
-//                                [[[UIApplication sharedApplication].delegate window] makeKeyWindow];
-//                            }
+                            self.xx_dimBackgroundAnimating = false
+                            if self == XXPopupWindow.shared().attachView {
+                                XXPopupWindow.shared().isHidden = true
+                                UIApplication.shared.delegate?.window??.makeKey()
+                            }
+                            else if self == XXPopupWindow.shared() {
+                                self.isHidden = true
+                                UIApplication.shared.delegate?.window??.makeKey()
+                            }
                         }
-                        })
+        })
     }
     
-    func mm_showDimBackground() {
-        self.mm_dimReferenceCount = self.mm_dimReferenceCount + 1
-        if self.mm_dimReferenceCount > 1 {
+    func xx_showDimBackground() {
+        self.xx_dimReferenceCount = self.xx_dimReferenceCount + 1
+        if self.xx_dimReferenceCount > 1 {
             return
         }
-        self.mm_dimBackgroundView.isHidden = false
-        self.mm_dimBackgroundAnimating = true
+        self.xx_dimBackgroundView.isHidden = false
+        self.xx_dimBackgroundAnimating = true
 
-        
-//        if ( self == [MMPopupWindow sharedWindow].attachView )
-//        {
-//            [MMPopupWindow sharedWindow].hidden = NO;
-//            [[MMPopupWindow sharedWindow] makeKeyAndVisible];
-//        }
-//        else if ( [self isKindOfClass:[UIWindow class]] )
-//        {
-//            self.hidden = NO;
-//            [(UIWindow*)self makeKeyAndVisible];
-//        }
-//        else
-//        {
-//            [self bringSubviewToFront:self.mm_dimBackgroundView];
-//        }
-//
-        UIView.animate(withDuration: self.mm_dimAnimationDuration,
+        if self == XXPopupWindow.shared().attachView {
+            XXPopupWindow.shared().isHidden = false
+            XXPopupWindow.shared().makeKeyAndVisible()
+        }
+        else if self.isKind(of: UIWindow.self) {
+            self.isHidden = false
+            (self as! UIWindow).makeKeyAndVisible()
+        }
+        else {
+            self.bringSubview(toFront: self.xx_dimBackgroundView)
+        }
+
+        UIView.animate(withDuration: self.xx_dimAnimationDuration,
                        delay: 0,
                        options: [UIViewAnimationOptions.curveEaseOut, .beginFromCurrentState],
             animations: { () -> Void in
-                self.mm_dimBackgroundView.alpha = 1.0
+                self.xx_dimBackgroundView.alpha = 1.0
         },
             completion: { (finished: Bool) -> Void in
                 if finished {
-                    self.mm_dimBackgroundAnimating = false
+                    self.xx_dimBackgroundAnimating = false
                 }
         })
     }
     
-    func mm_distributeSpacingHorizontally(views: NSArray) {
+    func xx_distributeSpacingHorizontally(views: NSArray) {
         var spaces = Array<UIView>.init()
         for _ in 0...views.count+1 {
             let v = UIView.init()
@@ -291,7 +330,7 @@ extension UIView {
         }
     }
     
-    func mm_distributeSpacingVertically(views: NSArray) {
+    func xx_distributeSpacingVertically(views: NSArray) {
         var spaces = Array<UIView>.init()
         for _ in 0...views.count+1 {
             let v = UIView.init()
