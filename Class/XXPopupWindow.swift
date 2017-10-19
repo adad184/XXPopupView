@@ -10,7 +10,7 @@ import UIKit
 
 class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
 
-    var touchWildToHide: Bool = false
+    var touchWildToHide: Bool = true
     
     
     open var attachView: UIView {
@@ -26,6 +26,7 @@ class XXPopupWindow: UIWindow, UIGestureRecognizerDelegate {
         let gesture = UITapGestureRecognizer.init(target: self, action: #selector(actionTap(gesture:)))
         gesture.cancelsTouchesInView = false
         gesture.delegate = self
+        self.isUserInteractionEnabled = true
         self.addGestureRecognizer(gesture)
     }
     

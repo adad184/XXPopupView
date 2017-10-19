@@ -184,7 +184,7 @@ class XXPopupView: UIView {
                            delay: 0.0,
                            options: [.curveEaseOut, .beginFromCurrentState],
                            animations: {
-                            self?.snp.makeConstraints({ (make) in
+                            self?.snp.updateConstraints({ (make) in
                                 make.bottom.equalTo((self?.attachedView.snp.bottom)!).offset(0)
                             })
                             self?.superview?.layoutIfNeeded()
