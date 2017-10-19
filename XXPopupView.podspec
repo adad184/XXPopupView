@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author       = { "HistoryZhang" => "history_zq@163.com" }
   s.source       = { :git => "https://github.com/HistoryZhang/XXPopupView.git", :tag => "0.0.1" }
   s.ios.deployment_target = '8.0'
-  s.source_files = './Classes/*.swift'
+  s.source_files = 'Classes/*.swift'
   s.requires_arc = true
   s.dependency 'SnapKit', '~> 4.0.0'
 end
