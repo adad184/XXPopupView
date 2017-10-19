@@ -73,7 +73,7 @@
 		03CE0DBC1F9321FA004C5AC6 /* XXPopupView */ = {
 			isa = PBXGroup;
 			children = (
-				03CE0DCF1F93247F004C5AC6 /* Class */,
+				03CE0DCF1F93247F004C5AC6 /* Classes */,
 				03CE0DBD1F9321FA004C5AC6 /* AppDelegate.swift */,
 				03CE0DBF1F9321FA004C5AC6 /* ViewController.swift */,
 				03CE0DC11F9321FA004C5AC6 /* Main.storyboard */,
@@ -84,7 +84,7 @@
 			path = XXPopupView;
 			sourceTree = "<group>";
 		};
-		03CE0DCF1F93247F004C5AC6 /* Class */ = {
+		03CE0DCF1F93247F004C5AC6 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				03CE0DD01F932502004C5AC6 /* XXPopupWindow.swift */,
@@ -94,8 +94,8 @@
 				97B9DC6A1F94DF9F00891B21 /* XXAlertView.swift */,
 				97B9DC721F975A4C00891B21 /* XXSheetView.swift */,
 			);
-			name = Class;
-			path = ../../Class;
+			name = Classes;
+			path = ../../Classes;
 			sourceTree = "<group>";
 		};
 		514F4EC3ECD47C62779FD638 /* Frameworks */ = {
