@@ -9,5 +9,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.source_files = 'Classes/*.swift'
   s.requires_arc = true
+  s.frameworks = 'Foundation'
   s.dependency 'SnapKit', '~> 4.0.0'
 end
