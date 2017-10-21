@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/HistoryZhang/XXPopupView.git", :tag => "0.0.1" }
   s.ios.deployment_target = '8.0'
   s.source_files = 'Classes/*.swift'
+  s.swift_version = '4.0'
   s.requires_arc = true
   s.frameworks = 'Foundation'
   s.dependency 'SnapKit', '~> 4.0.0'
