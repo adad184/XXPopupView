@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT License', :file => 'LICENSE' }
   s.author       = { "HistoryZhang" => "history_zq@163.com" }
   s.source       = { :git => "https://github.com/HistoryZhang/XXPopupView.git", :tag => "0.0.1" }
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
   s.source_files = 'Classes/*.swift'
   s.requires_arc = true
   s.frameworks = 'Foundation'
